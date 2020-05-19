@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 
-// a proper place to define a component
+// a proper place to define the component the component that handles stats
 const Statistics = (props) => {
-
+  
   return (
     <div>
       {props.name} {props.stats}
@@ -11,7 +11,13 @@ const Statistics = (props) => {
   );
 };
 
+
+
+
 const App = (props) => {
+  //array to be used in conditional rendering
+ 
+  
   const [clicks , setClicks] = useState({
     good : 0,
     good_point: 0,
@@ -56,6 +62,20 @@ const App = (props) => {
   
 console.log("bad_point" , clicks.bad_point);
 
+  if (all === 0) {
+    return (
+      <div>
+        <h1>give feedback</h1>
+        <button onClick={handleGood}>good</button>
+        <button onClick={handleNeutral} >neutral</button>
+        <button onClick={handleBad} >bad</button>
+        <h1>statistics</h1>
+        <p>No feedback given</p>
+      </div>
+    );
+  };
+
+
   return (
     <div>
       <h1>give feedback</h1>
@@ -63,12 +83,13 @@ console.log("bad_point" , clicks.bad_point);
       <button onClick = {handleNeutral} >neutral</button>
       <button onClick = {handleBad} >bad</button>
       <h1>statistics</h1>
-      <Statistics name = "good" stats = { clicks.good}/>
+      <Statistics name = "good" stats = { clicks.good} />
       <Statistics name = "neutral" stats = {clicks.neutral} />
       <Statistics name = "bad" stats = {clicks.bad} />
-      <Statistics name = "all" stats = {all} />
+      <Statistics name = "all" stats = {all}  all = { all}/>
       <Statistics name = "average" stats = {average} />
       <Statistics name = "positive" stats = {positive} />
+      
     </div>  
   );
 };
