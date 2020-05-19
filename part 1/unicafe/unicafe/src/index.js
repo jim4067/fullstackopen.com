@@ -1,63 +1,75 @@
 import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 
-
-const App = () => {
-  const [good , setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad , setBad] = useState(0);
-  
-  //the points for calculating average
-  const [bad_point , setBad_point] = useState(0);
-  const [good_point , setGood_point] = useState(0);
-  const [neutral_point, setNeutral_point] = useState(0);
-
-  const handleGood = () => {
-    setGood(good + 1 );
-    setGood_point(good_point + 1);
-  };
-  const handleNeutral = () => {
-    setNeutral ( neutral + 1 );
-    setNeutral_point(neutral_point + 0);
-  };
-  const handleBad = () => {
-    setBad ( bad + 1 );
-    setBad_point (bad_point - 1 );
-  };
-
-  //do not have to type the addition again 
-  const all = good + neutral + bad;
-  
-  
-
-  console.log("good " , good, "bad ", bad,   "bad_point ", bad_point, "all" , all);
+// a proper place to define a component
+const Statistics = (props) => {
 
   return (
     <div>
-      <h1>
-        give feedback
-      </h1>
-      <button onClick = {handleGood}>good</button>
-      <button onClick = {handleNeutral}>neutral</button>
-      <button onClick = {handleBad}  >bad</button>
-      <h1>statistics</h1>
-      <Display text = "Good"  stats = {good} />
-      <Display text = "Neutral"  stats = {neutral} />
-      <Display text = "Bad"  stats = {bad} />
-      <Display text = "All" stats = {all } />
-      <Display text = "Average" stats = {  (bad_point + good_point ) / all } />
-      <Display text = "Positive" stats = {(good/all)*100} />
-      
+      {props.name} {props.stats}
     </div>
   );
 };
 
-const Display = (props) => {
+const App = (props) => {
+  const [clicks , setClicks] = useState({
+    good : 0,
+    good_point: 0,
+    neutral : 0,
+    neutral_point : 0,
+    bad : 0,
+    bad_point : 0
+  });
+
+  const handleGood = () => {
+    const newClick = {
+      ...clicks,
+      good : clicks.good + 1,
+      good_point : clicks.good_point + 1
+    }
+    setClicks(newClick);
+  };
+
+  const handleNeutral = () => {
+    const newClick = {
+      ...clicks,
+      neutral : clicks.neutral + 1,
+      neutral_point : clicks.neutral_point + 0
+    }
+    setClicks(newClick);
+  };
+
+  const handleBad = () => {
+    const newClick = {
+      ...clicks,
+      bad : clicks.bad + 1,
+      bad_point : clicks.bad_point - 1
+    }
+    setClicks(newClick);
+  };
+
+  const all = clicks.good + clicks.neutral + clicks.bad;
+
+  const average = (clicks.bad_point + clicks.good_point ) / all;
+
+  const positive = (clicks.good / all) * 100;
+  
+console.log("bad_point" , clicks.bad_point);
 
   return (
     <div>
-      {props.text} {props.stats}
-    </div>
+      <h1>give feedback</h1>
+      <button onClick = {handleGood}>good</button>
+      <button onClick = {handleNeutral} >neutral</button>
+      <button onClick = {handleBad} >bad</button>
+      <h1>statistics</h1>
+      <Statistics name = "good" stats = { clicks.good}/>
+      <Statistics name = "neutral" stats = {clicks.neutral} />
+      <Statistics name = "bad" stats = {clicks.bad} />
+      <Statistics name = "all" stats = {all} />
+      <Statistics name = "average" stats = {average} />
+      <Statistics name = "positive" stats = {positive} />
+    </div>  
   );
 };
 
