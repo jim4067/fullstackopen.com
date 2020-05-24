@@ -12,14 +12,21 @@ const Button = (props) => {
 };
 
 
-//a proper place to define static component that handles a single stat
+
+ //a proper place to define static component that handles a single stat
 const Statistic = (props) => {
   return (
-    <div>
-      {props.name} {props.value}
-    </div>
+    <table>
+      <tbody>    
+        <tr>
+          <td>{props.name}</td>
+          <td>{props.value}</td>
+        </tr>
+      </tbody>
+  </table>
   );
 };
+
 
 // a proper place to define the component the component that handles stats
 const Statistics = (props) => {
