@@ -7,6 +7,7 @@ const App = (props) => {
   let [selected, setSelected] = useState(0);
   let [votes, setVotes] = useState(anecdotes.map( () => 0 ));
 
+  
   const showRandom = () => {
     setSelected(selected = Math.floor(Math.random() * anecdotes.length));
   };
@@ -15,18 +16,42 @@ const App = (props) => {
     const copy = {...votes};
     copy[selected] = copy[selected] + 1;
     setVotes(copy);
+
+    
   };
 
-  console.log("votes are " , votes  );
+  const largest = (arr, n) => {
+    let i;
+
+    
+    let max = arr[0];
+
+    for (i = 1; i < n; i++)
+      if (arr[i] > max)
+        max = arr[i];
+
+    return max;
+  };
+
+
+  console.log("most votes are", largest(votes, 6));
+
+
+  let max = largest(votes, anecdotes.length);
+
 
   return (
     <div>
+
+      <h1> Anecdote of the day</h1>
       <p>
         {props.anecdotes[selected]}
       </p>
-  <p>has { votes[selected] } votes</p>
-      <button onClick = {handleVotes}>vote</button>{ " " }
-      <button onClick = {showRandom}>next anecdote</button>
+      <p>has {votes[selected]} votes</p>
+      <button onClick={handleVotes}>vote</button>{" "}
+      <button onClick={showRandom}>next anecdote</button>
+      <h1>Anecdote with the most votes</h1>
+      <p> {props.anecdotes[max]}</p>
     </div>
   );
 };
