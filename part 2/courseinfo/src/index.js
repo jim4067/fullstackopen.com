@@ -32,9 +32,20 @@ const Content = (props) => {
       <Part name = {props.course.parts[1].name}  exercises ={props.course.parts[1].exercises}/> 
       <Part name = {props.course.parts[2].name}  exercises ={props.course.parts[2].exercises}/> 
     </div>
-  )
-}
+  );
+};
 
+
+const Total = (props) =>  {
+
+  const sum = props.course.parts[0].exercises + props.course.parts[1].exercises + props.course.parts[2].exercises;
+
+  return (
+    <div>
+      The sum of the exercises is {sum}
+    </div>
+  )
+};
 
 const Course = (props) => {
 
@@ -42,6 +53,7 @@ const Course = (props) => {
     <div>
       <Header name = {props.course.name}/>
       <Content course={props.course} />
+      <Total course={props.course} />
     </div>
   );
 }
