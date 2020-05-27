@@ -38,11 +38,18 @@ const Content = (props) => {
 
 const Total = (props) =>  {
 
-  const sum = props.course.parts[0].exercises + props.course.parts[1].exercises + props.course.parts[2].exercises;
+  console.log("the first exercise example" , props.course.parts[1].exercises);
+  
+  const total = props.course.parts.reduce( ( acc, val) => {
+    console.log("i want to see this magic happening here", "acc is ...", acc, "val is", val.exercises);
+    return acc + val.exercises;
+  },0 );
+
+  
 
   return (
     <div>
-      The sum of the exercises is {sum}
+      The sum of the exercises is {total};
     </div>
   )
 };
