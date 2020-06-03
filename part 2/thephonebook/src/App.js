@@ -1,18 +1,25 @@
-import React, { useState } from 'react'
+import axios from 'axios'
+import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import Personform from './components/Personform'
 
 
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Homer Simpson', number: '040-123456' },
-    { name: 'Marge Simpson', number: '39-44-5323523' },
-    { name: 'Lisa Simpson', number: '12-43-234345' },
-    { name: 'Bart Simpson', number: '39-23-6423122' }
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('');
   const [newNum, setNewNum] = useState('');
+
+  const hook = () => {
+    console.log("i have no idea what i am doing");
+    axios
+      .get('https://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data);
+      })
+  }
+
+  useEffect(hook, []);
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -53,11 +60,10 @@ const App = () => {
     <div>
 
       <h2>Phonebook</h2>
-      <Filter value={newName} persons={persons} displayFunc={displayFunc} / >
+      <Filter value={newName} persons={persons} displayFunc={displayFunc} />
 
-      <Personform addPerson ={addPerson} newname={newName} handlePersonadd={handlePersonadd} newNum={newNum}
-       handleNumadd={handleNumadd} handleRepeat={handleRepeat} displayFunc={displayFunc} /> 
-
+      <Personform addPerson={addPerson} newname={newName} handlePersonadd={handlePersonadd} newNum={newNum}
+        handleNumadd={handleNumadd} handleRepeat={handleRepeat} displayFunc={displayFunc} />
 
     </div>
   );
