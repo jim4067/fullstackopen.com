@@ -9,25 +9,24 @@ const Filter = (props) => {
 
     const handleChange = (event) => {
 
-        let oldList = props.persons.map( (person) => 
-        {
-            return {name :person.name.toLowerCase(), number : person.number }
+        let oldList = props.persons.map((person) => {
+            return { name: person.name.toLowerCase(), number: person.number }
         })
 
-        if (event !== ""){
+        if (event !== "") {
             let newList = [];
             setSearch(event);
 
-            newList = oldList.filter( person => person.name.includes(search.toLowerCase() ));
+            newList = oldList.filter(person => person.name.includes(search.toLowerCase()));
             setFilterDisplay(newList)
         } else {
             setFilterDisplay(props.persons);
         }
     }
-    return(
+    return (
         <div>
-            filter shown with <input onChange={ event => handleChange(event.target.value)} />
-            {filterDiplay.map( (person) => <p>{person.name} <span>{person.number}</span></p>)}
+            filter shown with <input onChange={event => handleChange(event.target.value)} />
+            {filterDiplay.map((person, i) => <p key={i}>{person.name} <span>{person.number}</span></p>)}
         </div>
     );
 }

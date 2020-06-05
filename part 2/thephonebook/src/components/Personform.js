@@ -19,9 +19,7 @@ const Personform = (props) => {
                 </div>
             </form>
 
-            <h3>Numbers</h3>
-
-            {props.displayFunc}
+            
 
         </div>
     );
