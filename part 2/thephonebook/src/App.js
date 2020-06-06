@@ -49,28 +49,51 @@ const App = () => {
     setNewNum(event.target.value);
   }
 
-  //the function that alerts when entering duplicate values
-  function handleRepeat() {
-    persons.filter((nameparam) => newName === nameparam.name ? alert(`${newName} already exist`) : newName);
+  const listOfNames = persons.map(person => person.name.toLowerCase())
+  const nameLowerCase = newName.toLowerCase()
+
+  if (listOfNames.includes(nameLowerCase)) {
+    const confirmation = window.confirm(`${newName} is already part of the phonebook. Replace the existing number with a the one provided?`)
+
+    // if user selects cancel, then stop 
+    if (!confirmation) {
+      return null
+    }
+    // get existing person object
+    const existingObject = persons.filter(person => {
+      return person.name.toLowerCase() === nameLowerCase
+    })[0]
+
+    // store id of personObject to be updated
+    const id = existingObject.id
+
+    // create new object for this person which has updated number
+    const newObject = {
+      ...existingObject,
+      number: newNum
+    }
+    PersonService.update(id, newObject)
+      .then(updatedPerson => {
+        // update was successful, take response data and update state variable
+        const updatedPersons = persons.map(person =>
+          person.id === id ? updatedPerson : person)
+        setPersons(updatedPersons)
+
+        // add message to inform user the update was successful
+
+
+        // reset form inputs
+        setNewName('')
+        setNewNum('')
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+
+    // prevent application from executing any further
+    return null
   }
-
-  /*
-  //the function that will be used for deleting users
-  const handleDelOf = (id) => {
-    const url = `http://localhost:3001/notes/${id}`
-    const person = persons.find( p => p.id === id)
-    const changedNote = { ...person }
-  
-    axios.delete(url, changedNote).then(response => {
-      setPersons(persons.map(p => p.id !== id ? p : response.data))
-
-
-    const person = persons.filter( perPar => newName === perPar.name execute function )
-    console.log(" find person" , person);
-
-    })
-  }
-  */
 
   //the function that will be used for DELETING users
   //PSA !When you setNotes using the response received directly things break things.
@@ -85,7 +108,7 @@ const App = () => {
         setPersons(persons.map(perParam => perParam.id !== id ? perParam : res.data))
       })
       .catch(err => {
-        console.log("shot happened", err)
+        console.log("shit happened", err)
       })
   }
 
@@ -96,7 +119,7 @@ const App = () => {
       <Filter value={newName} persons={persons} />
 
       <Personform addPerson={addPerson} newname={newName} handlePersonadd={handlePersonadd} newNum={newNum}
-        handleNumadd={handleNumadd} handleRepeat={handleRepeat} />
+        handleNumadd={handleNumadd} />
 
       <h3> Numbers </h3>
 
