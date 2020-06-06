@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import Personform from './components/Personform';
@@ -11,6 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNum, setNewNum] = useState('');
 
+  //get data from the server and update DOM if something changes
   const hook = () => {
     PersonService
       .getAll()
@@ -29,12 +29,12 @@ const App = () => {
       number: newNum
     };
     PersonService
-            .create(personObect)
-            .then( response => {
-              setPersons(persons.concat(response) )
-              setNewName("");
-              setNewNum("");
-            } )
+      .create(personObect)
+      .then(response => {
+        setPersons(persons.concat(response))
+        setNewName("");
+        setNewNum("");
+      })
   };
 
 
@@ -49,23 +49,12 @@ const App = () => {
     setNewNum(event.target.value);
   }
 
-  /*the function that alerts when entering dulicate values
+  //the function that alerts when entering duplicate values
   function handleRepeat() {
     persons.filter((nameparam) => newName === nameparam.name ? alert(`${newName} already exist`) : newName);
   }
-  */
- function handleRepeat (id) {
-   const url = `http://localhost:3001/persons/${id}`;
-   const person = persons.find( personparam => personparam.id === id);
-   const changedPerson = {...persons}
 
-   console.log('what the hell does the console.log return', person)
-   persons.filter((nameparam) => newName === nameparam.name ? alert(`${newName} already exist,replace it`) : newName);
-   axios.put(url, changedPerson).then(response => {
-    setPersons(persons.map(personParam => personParam.id !== id ? person : response.data))
-  })
- }
-
+  /*
   //the function that will be used for deleting users
   const handleDelOf = (id) => {
     const url = `http://localhost:3001/notes/${id}`
@@ -74,9 +63,31 @@ const App = () => {
   
     axios.delete(url, changedNote).then(response => {
       setPersons(persons.map(p => p.id !== id ? p : response.data))
+
+
+    const person = persons.filter( perPar => newName === perPar.name execute function )
+    console.log(" find person" , person);
+
     })
   }
+  */
 
+  //the function that will be used for DELETING users
+  //PSA !When you setNotes using the response received directly things break things.
+  //instead you map the data returned using a function. USE A FUNCTION!!!!!
+  function handleDelOf(id) {
+    console.log("handle deletion of ", persons);
+
+    PersonService
+      .delThis(id)
+      .then(res => {
+        console.log(res, " might have been deleted")
+        setPersons(persons.map(perParam => perParam.id !== id ? perParam : res.data))
+      })
+      .catch(err => {
+        console.log("shot happened", err)
+      })
+  }
 
   return (
     <div>
@@ -85,13 +96,19 @@ const App = () => {
       <Filter value={newName} persons={persons} />
 
       <Personform addPerson={addPerson} newname={newName} handlePersonadd={handlePersonadd} newNum={newNum}
-        handleNumadd={handleNumadd} handleRepeat={handleRepeat(persons.id)} />
+        handleNumadd={handleNumadd} handleRepeat={handleRepeat} />
 
       <h3> Numbers </h3>
-      <Display persons={persons} handleDel={ () => handleDelOf(persons.id)} />
+
+      {persons.map(personParam =>
+        <div key={personParam.id}>
+          <Display key={personParam.id} name={personParam.name} number={personParam.number} />
+          <button onClick={() => handleDelOf(personParam.id)}>delete</button>
+        </div>
+      )}
 
     </div>
   );
 }
 
-export default App
+export default App;
