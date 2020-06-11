@@ -1,6 +1,7 @@
 const express = require('express');
 
 const app = express();
+app.use(express.json() );
 
 let persons = [
     {
@@ -50,6 +51,45 @@ app.get('/api/persons/:id' , (req, res) => {
     } else {
         return res.status(404).end();
     }
+} );
+
+function generateID () {
+    const maxID = persons.length > 0 ? Math.max(...persons.map( p => p.id) ) : 0;
+    return maxID + 1;
+}
+//making a POST request
+app.post('/api/persons' , (req, res) => {
+    const body = req.body;
+
+    const repeated = persons.find( p => p.name === body.name);
+    console.log(body.name);
+    if( !body.name || !body.number ){
+        return res.status(404).json({
+            error: "both name and number must contain a value"
+        } );
+    }
+  if(repeated){
+        return res.status(404).json({
+            error: "names must be unique"
+        });
+    }
+
+    const person = {
+        name : body.name,
+        number : body.number,
+        id : generateID()
+    }
+
+    persons = persons.concat(person);
+    res.json(persons);
+} );
+
+//deleting a single resource
+app.delete('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id);
+    persons = persons.filter( p => p.id !== id)
+
+    res.status(404).end(); 
 } );
 const PORT = 3030;
 app.listen(PORT, () => {
