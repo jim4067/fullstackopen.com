@@ -4,7 +4,11 @@ const morgan = require('morgan');
 const app = express();
 app.use(express.json() );
 
-app.use(morgan('tiny') );
+morgan.token('body' , function (req) {
+    return [JSON.stringify({"name" : req.body.name}), JSON.stringify({"number" : req.body.number})]
+} );
+
+app.use(morgan( `:method :url :status :response-time ms :body` ));
 
 let persons = [
     {
@@ -65,7 +69,6 @@ app.post('/api/persons' , (req, res) => {
     const body = req.body;
 
     const repeated = persons.find( p => p.name === body.name);
-    console.log(body.name);
     if( !body.name || !body.number ){
         return res.status(404).json({
             error: "both name and number must contain a value"
