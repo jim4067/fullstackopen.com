@@ -1,14 +1,19 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const app = express();
 app.use(express.json() );
+app.use(express.static('build'))
 
+//using morgan to log to the console
 morgan.token('body' , function (req) {
     return [JSON.stringify({"name" : req.body.name}), JSON.stringify({"number" : req.body.number})]
 } );
 
 app.use(morgan( `:method :url :status :response-time ms :body` ));
+
+app.use(cors() );
 
 let persons = [
     {
@@ -97,7 +102,7 @@ app.delete('/api/persons/:id', (req, res) => {
 
     res.status(404).end(); 
 } );
-const PORT = 3030;
+const PORT = process.env.PORT || 3030;
 app.listen(PORT, () => {
     console.log(`running server on port ${PORT}`);
 })
