@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import Personform from './components/Personform';
 import Display from './components/Display';
-import PersonService from './services/person'
+import PersonService from './services/person';
+import Notification from './components/Notification';
 
 
 const App = () => {
@@ -74,7 +75,7 @@ const App = () => {
     }
     PersonService.update(id, newObject)
       .then(updatedPerson => {
-        // update was successful, take response data and update state variable
+        // the update was successful take response data and update state variable
         const updatedPersons = persons.map(person =>
           person.id === id ? updatedPerson : person)
         setPersons(updatedPersons)
